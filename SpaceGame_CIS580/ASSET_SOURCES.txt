@@ -1,0 +1,10 @@
+﻿Content/space_background.png - created by Polovinkin as part of their Space Pack on Itch.io (https://vectorpixelstar.itch.io/space), licensed for free use - based on statement 
+from public-license.txt file in the download folder ("You can use this work on your personal or commercial projects, no credit required. Just don't redistribute the assets.")
+
+Content/ship.png - created by Tavino on Itch.io (https://tavino.itch.io/spaceship), licensed for free use - no official statement in asset description but free price on Itch.io
+
+Content/CelestialObjects.png - created by N2D as part of their Celestial Objects Pack on Itch.io (https://norma-2d.itch.io/celestial-objects-pixel-art-pack), licensed for free use - based 
+on statement from asset readme.txt file in download package ("LICENSE: You can use this asset pack both in free and commercial projects. You may modify it to suit your own needs. Credit is not necessary, but appreciated.")
+
+Content/saturn_planet.png - created by Kxnai using Deep-Fold pixel planet generator (https://deep-fold.itch.io/pixel-planet-generator), asset available on Itch.io (https://kxnai.itch.io/5-free-pixel-planets),
+licensed for free use - based on statement from asset page's description ("These are free to use commercially and personally.")
