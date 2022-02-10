@@ -26,6 +26,8 @@ namespace SpaceGame_CIS580
 
         }
 
+        public SpaceshipSprite() { }
+
         /// <summary>
         /// Load the space ship texture
         /// </summary>

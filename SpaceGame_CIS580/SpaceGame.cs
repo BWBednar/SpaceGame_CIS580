@@ -42,6 +42,7 @@ namespace SpaceGame_CIS580
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new GamePlayScreen(), null);
             //_screenManager.AddScreen(new BackgroundScreen(), null);
             //_screenManager.AddScreen(new MainMenuScreen(), null);
             //_screenManager.AddScreen(new SplashScreen(), null);
