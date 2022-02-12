@@ -17,7 +17,7 @@ namespace SpaceGame_CIS580
 {
     public class SpaceshipSprite
     {
-        const float LINEAR_ACCELERATION = 100;
+        const float LINEAR_ACCELERATION = 50;
         const float ANGULAR_ACCELERATION = 5;
 
         Texture2D _texture;
@@ -30,6 +30,9 @@ namespace SpaceGame_CIS580
         Vector2 direction;
         float angularVelocity;
 
+        /// <summary>
+        /// The position of the space ship sprite
+        /// </summary>
         public Vector2 Position
         {
             get { return position; }
@@ -37,8 +40,16 @@ namespace SpaceGame_CIS580
 
         private BoundingRectangle bounds;
 
+        /// <summary>
+        /// The collision bounds of the sprite
+        /// </summary>
         public BoundingRectangle Bounds => bounds;
 
+        /// <summary>
+        /// Constructor for the space ship sprite
+        /// </summary>
+        /// <param name="game">The game being played</param>
+        /// <param name="bounds">The collision bounds of the ship</param>
         public SpaceshipSprite(Game game, BoundingRectangle bounds)
         {
             this.game = game;
@@ -51,6 +62,9 @@ namespace SpaceGame_CIS580
         /// </summary>
         public bool Colliding { get; set; }
 
+        /// <summary>
+        /// Indicates if the ship has been destroyed
+        /// </summary>
         public bool Destroyed { get; set; }
 
         /// <summary>
@@ -64,17 +78,6 @@ namespace SpaceGame_CIS580
         public Vector2 Velocity { get; set; }
 
         public float Angle { get; private set; }
-
-        public float Mass
-        {
-            get => radius;
-            set
-            {
-                radius = value;
-                scale = radius / 16;
-                origin = new Vector2(16, 16); // asteroid sprite is 32 by 32 pixels
-            }
-        }
 
         /// <summary>
         /// Load the space ship texture
@@ -139,13 +142,18 @@ namespace SpaceGame_CIS580
         /// <summary>
         /// Draws the space ship sprite
         /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="spriteBatch"></param>
+        /// <param name="gameTime">The game time</param>
+        /// <param name="spriteBatch">The sprite batch</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, position, null, Color.White, Angle, new Vector2(26, 26), 1.0f, SpriteEffects.None, 0);
         }
 
+        /// <summary>
+        /// Detects if there has been a collision, particularly with an asteroid sprite
+        /// </summary>
+        /// <param name="circle">The bounding circle being detected</param>
+        /// <returns>If the ship has collided with the circle</returns>
         public bool CollidesWith(BoundingCircle circle)
         {
             return this.bounds.CollidesWith(circle);

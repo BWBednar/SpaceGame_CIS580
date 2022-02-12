@@ -1,5 +1,5 @@
 ﻿/**
- * Starting Code from Nathan Bean's GameArchitectureExample project
+ * Starting Code from Nathan Bean's GameArchitectureExample project, currently the architecture example is not implemented though
  */
 
 using System.Collections.Generic;
@@ -9,14 +9,13 @@ using Microsoft.Xna.Framework.Input;
 using SpaceGame_CIS580.Screens;
 using SpaceGame_CIS580.StateManagement;
 using SpaceGame_CIS580.Collisions;
-//using tainicom.Aether.Physics2D.Dynamics; Was having trouble with physics engine, so following example for the example C for game physics for now
+//using tainicom.Aether.Physics2D.Dynamics; //was having some trouble with the physics engine, so using pure calculations from physics examples provided by Nathan Bean
 
 namespace SpaceGame_CIS580
 {
-    // Sample showing how to manage different game states, with transitions
-    // between menu screens, a loading screen, the game itself, and a pause
-    // menu. This main game class is extremely simple: all the interesting
-    // stuff happens in the ScreenManager component.
+    /// <summary>
+    /// The main game window
+    /// </summary>
     public class SpaceGame : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -33,8 +32,12 @@ namespace SpaceGame_CIS580
         bool gameStart = true;
         bool gameLose = false;
         bool gameVictory = false;
-        
+        KeyboardState lastInput;
+        KeyboardState currentInput;
 
+        /// <summary>
+        /// Contructor for the game
+        /// </summary>
         public SpaceGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -56,6 +59,9 @@ namespace SpaceGame_CIS580
             //AddInitialScreens();
         }
 
+        /// <summary>
+        /// For game architecutre, not implemented currently
+        /// </summary>
         private void AddInitialScreens()
         {
             //_screenManager.AddScreen(new BackgroundScreen(), null);
@@ -65,8 +71,12 @@ namespace SpaceGame_CIS580
             //_screenManager.AddScreen(new SplashScreen(), null);
         }
 
+        /// <summary>
+        /// Initialize the game and its sprites
+        /// </summary>
         protected override void Initialize()
         {
+            //Get 10 asteroids in random positions around the ship sprite
             System.Random random = new System.Random();
             asteroids = new List<AsteroidSprite>();
             int xMidPoint = Constants.GAME_WIDTH / 2;
@@ -90,6 +100,7 @@ namespace SpaceGame_CIS580
                 });
             }
 
+            //Establish the other needed sprites
             background = new BackgroundSprite();
             ship = new SpaceshipSprite(this, new BoundingRectangle(xMidPoint - 26, yMidPoint - 26, 52, 52));
             blasterFire = new List<BlasterFireSprite>();
@@ -124,6 +135,9 @@ namespace SpaceGame_CIS580
 
         }
 
+        /// <summary>
+        /// Load the game content
+        /// </summary>
         protected override void LoadContent() 
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -133,14 +147,17 @@ namespace SpaceGame_CIS580
             pressStart2P = Content.Load<SpriteFont>("PressStart2P");
         }
 
-        KeyboardState lastInput;
-        KeyboardState currentInput;
+        /// <summary>
+        /// Updates the game window and its sprites
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
         protected override void Update(GameTime gameTime)
         {
             //base.Update(gameTime);
             lastInput = currentInput;
             currentInput = Keyboard.GetState();
 
+            //Account for some user input for blaster fire and exit
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
             if (currentInput.IsKeyUp(Keys.Space) && lastInput.IsKeyDown(Keys.Space)) CreateBlasterFire();
 
@@ -159,6 +176,10 @@ namespace SpaceGame_CIS580
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Draws the game window and its sprites
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Transparent);
@@ -169,7 +190,7 @@ namespace SpaceGame_CIS580
             foreach (var fire in blasterFire) if (fire.OnScreen) fire.Draw(gameTime, _spriteBatch);
             if(!ship.Destroyed) ship.Draw(gameTime, _spriteBatch);
             foreach (var explosion in explosions) if (!explosion.AnimationComplete) explosion.Draw(gameTime, _spriteBatch);
-
+            //Display a message at the start of the game
             if (gameStart)
             {
                 _spriteBatch.DrawString(pressStart2P, "Destory", new Vector2(75, 35), Color.Gold);
@@ -180,11 +201,13 @@ namespace SpaceGame_CIS580
                     gameStart = false;
                 }
             }
+            //Display a message if the player loses the game
             if (gameLose)
             {
                 _spriteBatch.DrawString(pressStart2P, "Restart Game", new Vector2(75, 35), Color.Gold);
                 _spriteBatch.DrawString(pressStart2P, "To Try Again", new Vector2(115, 85), Color.Gold);
             }
+            //Display a message if the player wins the game
             if (gameVictory)
             {
                 _spriteBatch.DrawString(pressStart2P, "You Win!", new Vector2(75, 35), Color.Gold);
@@ -195,13 +218,17 @@ namespace SpaceGame_CIS580
 
         }
 
+        /// <summary>
+        /// Method that handles the collision interactions of the sprites and any actions that result from those collisions
+        /// </summary>
         private void AsteroidDetectionAndUpdates()
         {
+            //variables for tracking blaster fires and asteroids that need to be removed
             int toRemoveAsteroid = -1;
             int toRemoveBlaster = -1;
             for (int i = 0; i < asteroids.Count; i++)
             {
-                //If the space ship has hit a rocket, the ship will be destroyed
+                //If the space ship has hit an asteroid, the ship will be destroyed
                 if (ship.CollidesWith(asteroids[i].Bounds) && !ship.Destroyed)
                 {
                     ship.Destroyed = true;
@@ -210,6 +237,7 @@ namespace SpaceGame_CIS580
                 }
                 foreach (var fire in blasterFire)
                 {
+                    //If a blaster fire has hit an asteroid, that fire will be gone along with the asteroid
                     if (fire.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
                     {
                         asteroids[i].Destroyed = true;
@@ -220,6 +248,7 @@ namespace SpaceGame_CIS580
                 }
                 for (int j = i + 1; j < asteroids.Count; j++)
                 {
+                    //Detects collision between asteroids, taken from PhysicsExampleC assignment by Nathan Bean
                     if (asteroids[i].CollidesWith(asteroids[j]))
                     {
                         asteroids[i].Colliding = true;
@@ -247,6 +276,7 @@ namespace SpaceGame_CIS580
                     }
                 }
             }
+            //Removes the blaster fire and asteroid sprites if they collided
             if (toRemoveAsteroid != -1 && toRemoveBlaster != -1)
             {
                 asteroids[toRemoveAsteroid] = null;
@@ -254,9 +284,13 @@ namespace SpaceGame_CIS580
                 blasterFire[toRemoveBlaster] = null;
                 blasterFire.RemoveAt(toRemoveBlaster);
             }
+            //The player wins if there are no more asteroids
             if (asteroids.Count == 0) gameVictory = true;
         }
 
+        /// <summary>
+        /// Helper method for creating new blaster fire sprites
+        /// </summary>
         private void CreateBlasterFire()
         {
             BlasterFireSprite newFire = new BlasterFireSprite(ship.Angle, ship.Position,
@@ -265,6 +299,10 @@ namespace SpaceGame_CIS580
             blasterFire.Add(newFire);
         }
 
+        /// <summary>
+        /// Helper method for creating new explosion sprites
+        /// </summary>
+        /// <param name="position">The position of the explosion</param>
         private void CreateExplosion(Vector2 position)
         {
             ExplosionSprite newExplosion = new ExplosionSprite(position);
