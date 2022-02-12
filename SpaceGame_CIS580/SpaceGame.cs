@@ -208,7 +208,7 @@ namespace SpaceGame_CIS580
                 _spriteBatch.DrawString(pressStart2P, "To Try Again", new Vector2(115, 85), Color.Gold);
             }
             //Display a message if the player wins the game
-            if (gameVictory)
+            if (gameVictory && !gameLose )
             {
                 _spriteBatch.DrawString(pressStart2P, "You Win!", new Vector2(75, 35), Color.Gold);
                 _spriteBatch.DrawString(pressStart2P, "Well Done!", new Vector2(115, 85), Color.Gold);
