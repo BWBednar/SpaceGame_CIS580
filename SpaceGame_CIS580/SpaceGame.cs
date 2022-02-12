@@ -177,14 +177,14 @@ namespace SpaceGame_CIS580
                 if (ship.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
                 {
                     ship.Destroyed = true;
-                    CreateExplosion(ship.Position);
+                    CreateExplosion(new Vector2(ship.Bounds.X, ship.Bounds.Y));
                 }
                 foreach (var fire in blasterFire)
                 {
                     if (fire.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
                     {
                         asteroids[i].Destroyed = true;
-                        CreateExplosion(asteroids[i].Bounds.Center);
+                        CreateExplosion(new Vector2(asteroids[i].Bounds.Center.X, asteroids[i].Bounds.Center.Y));
                         toRemoveAsteroid = asteroids.IndexOf(asteroids[i]);
                         toRemoveBlaster = blasterFire.IndexOf(fire);
                     }

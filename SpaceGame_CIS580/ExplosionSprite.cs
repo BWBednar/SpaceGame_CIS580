@@ -46,7 +46,7 @@ namespace SpaceGame_CIS580
                 animationFrame++;
             }
             Rectangle source = new Rectangle(animationFrame * 111, 0, 111, 111);
-            spriteBatch.Draw(_texture, position, source, Color.White, 0, position, 0.70f, SpriteEffects.None, 0);
+            spriteBatch.Draw(_texture, position, source, Color.White, 0, new  Vector2 (55, 55) , 0.70f, SpriteEffects.None, 0);
         }
     }
 }
