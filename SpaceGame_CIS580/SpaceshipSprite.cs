@@ -17,19 +17,17 @@ namespace SpaceGame_CIS580
 {
     public class SpaceshipSprite
     {
-        const float LINEAR_ACCELERATION = 50;
+        const float LINEAR_ACCELERATION = 100;
         const float ANGULAR_ACCELERATION = 5;
 
         Texture2D _texture;
         float scale;
         float radius;
         Vector2 origin;
-
         Game game;
         Vector2 position = new Vector2(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT / 2);
         Vector2 velocity;
         Vector2 direction;
-
         float angularVelocity;
 
         public Vector2 Position

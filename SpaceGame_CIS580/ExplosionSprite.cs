@@ -7,16 +7,26 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceGame_CIS580
 {
+    /// <summary>
+    /// Class representing an explosion sprite
+    /// </summary>
     public class ExplosionSprite
     {
         private Vector2 position;
         private int animationFrame;
         private double animationTimer;
         private Texture2D _texture;
-
         private bool animationComplete;
+
+        /// <summary>
+        /// Bool for if the explosion animation is complete
+        /// </summary>
         public bool AnimationComplete { get { return animationComplete; } }
 
+        /// <summary>
+        /// Constructor for the explosion sprite
+        /// </summary>
+        /// <param name="position">The location of the sprite</param>
         public ExplosionSprite(Vector2 position)
         {
             this.position = position;
@@ -31,6 +41,11 @@ namespace SpaceGame_CIS580
             _texture = contentManager.Load<Texture2D>("explosionBig");
         }
 
+        /// <summary>
+        /// Draws the explosion sprite
+        /// </summary>
+        /// <param name="gameTime">The game tiem</param>
+        /// <param name="spriteBatch">The sprite batch</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (animationComplete) return;

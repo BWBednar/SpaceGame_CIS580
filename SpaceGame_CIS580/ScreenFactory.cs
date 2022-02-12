@@ -1,5 +1,5 @@
 ﻿/**
- * Starting Code from Nathan Bean's GameArchitectureExample project
+ * Starting Code from Nathan Bean's GameArchitectureExample project, not currently implemented
  */
 
 using System;

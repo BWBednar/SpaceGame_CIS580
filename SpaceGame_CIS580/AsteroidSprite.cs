@@ -8,21 +8,33 @@ using SpaceGame_CIS580.Collisions;
 
 namespace SpaceGame_CIS580
 {
+    /// <summary>
+    /// Class representing an asteroid sprite
+    /// </summary>
     public class AsteroidSprite
     {
-        private Texture2D _texture;
-        private Vector2 origin;
-        private float radius;
-        private float scale;
-        private double timer;
-        private int rotationCount;
 
-        private BoundingCircle bounds;
+        Texture2D _texture;
+        Vector2 origin;
+        float radius;
+        float scale;
+        double timer;
+        int rotationCount;
+        BoundingCircle bounds;
 
+        /// <summary>
+        /// Bounding circle for collision detection
+        /// </summary>
         public BoundingCircle Bounds => bounds;
 
+        /// <summary>
+        /// If the asteroid has been destroyed
+        /// </summary>
         public bool Destroyed = false;
 
+        /// <summary>
+        /// Constructor for the asteroid sprite, establishes binding circle
+        /// </summary>
         public AsteroidSprite()
         {
             this.bounds = new BoundingCircle(Center + new Vector2(-16, -16), 32);
@@ -43,6 +55,9 @@ namespace SpaceGame_CIS580
         /// </summary>
         public Vector2 Velocity { get; set; }
 
+        /// <summary>
+        /// The mass of the asteroid sprite
+        /// </summary>
         public float Mass
         {
             get => radius;
@@ -80,9 +95,14 @@ namespace SpaceGame_CIS580
             Colliding = false;
         }
 
+        /// <summary>
+        /// Draws the asteroid sprite, rotates sprite in a circle slightly
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
+        /// <param name="spriteBatch">The sprite batch</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Destroyed) return;
+            if (Destroyed) return; //Do not draw if the asteroid has been destroyed
 
             timer += gameTime.ElapsedGameTime.TotalSeconds;
             if (timer > 0.1)
@@ -95,6 +115,11 @@ namespace SpaceGame_CIS580
             spriteBatch.Draw(_texture, Center, source, Color.White, (float)roation, origin, scale, SpriteEffects.None, 0);
         }
 
+        /// <summary>
+        /// Detects collision between two asteroids
+        /// </summary>
+        /// <param name="other">The asteroid that is being detected</param>
+        /// <returns>If the asteroids have collided</returns>
         public bool CollidesWith(AsteroidSprite other)
         {
             return this.Mass + other.Mass >= Vector2.Distance(Center, other.Center);

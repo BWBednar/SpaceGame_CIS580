@@ -8,20 +8,17 @@ using SpaceGame_CIS580.Collisions;
 
 namespace SpaceGame_CIS580
 {
+    /// <summary>
+    /// Class representing a blaster fire sprite
+    /// </summary>
     public class BlasterFireSprite
     {
         const float LINEAR_ACCELERATION = 500;
-
-        private Texture2D _texture;
-
+        Texture2D _texture;
         float angle;
-
         Vector2 position;
-
         Vector2 velocity;
-
         Vector2 direction;
-
         float angularVelocity;
 
         /// <summary>
@@ -29,12 +26,24 @@ namespace SpaceGame_CIS580
         /// </summary>
         public Vector2 Center { get; set; }
 
+        /// <summary>
+        /// If the blaster fire is still on the game screen
+        /// </summary>
         public bool OnScreen { get; set; } = true;
 
-        private BoundingRectangle bounds;
 
+        private BoundingRectangle bounds;
+        /// <summary>
+        /// The collision bounds of the blaster fire
+        /// </summary>
         public BoundingRectangle Bounds => bounds;
 
+        /// <summary>
+        /// Constructor for the blaster fire sprite
+        /// </summary>
+        /// <param name="angle">The angle of the blaster fire movement</param>
+        /// <param name="startingPosition">Where the sprite is starting</param>
+        /// <param name="bounds">The bounding rectangle</param>
         public BlasterFireSprite(float angle, Vector2 startingPosition, BoundingRectangle bounds)
         {
             this.angle = angle;
@@ -85,12 +94,23 @@ namespace SpaceGame_CIS580
             bounds.Y = this.position.Y;
         }
 
+        /// <summary>
+        /// Draws the blaster sprite
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
+        /// <param name="spriteBatch">The sprite batch</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!OnScreen) return; //Do not draw if the sprite is not on screen
             Rectangle source = new Rectangle(0, 0, 32, 32);
             spriteBatch.Draw(_texture, position, source, Color.White, angle, new Vector2(16, 16), 1.0f, SpriteEffects.None, 0);
         }
 
+        /// <summary>
+        /// Detects a collision with an asteroid sprite's bounding circle
+        /// </summary>
+        /// <param name="asteroid">The asteroid sprite's bounding circle</param>
+        /// <returns>If there was a collision</returns>
         public bool CollidesWith(BoundingCircle asteroid)
         {
             if (this.bounds.CollidesWith(asteroid))
