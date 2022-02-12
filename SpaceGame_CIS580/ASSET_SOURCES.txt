@@ -13,4 +13,6 @@ Content/16ShipCollection.png - created by Master484 on FreeGameArt.Org (https://
 
 Content/explosionBig.png - created by Justin Dalessandro(ColdOneK) on FreeGameArt.Org (https://opengameart.org/content/2d-pixel-explosion-9-frames), licensed under CC-BY 4.0
 
+Content/shuttle2.png - created by Xevin on FreeGameArt.Org (https://opengameart.org/content/simple-spaceship), licensed under public domain
+
 Content/blasterbolt.png - created by AlejandroHaibi on FreeGameArt.Org (https://opengameart.org/content/blaster-bolt), licensed under public domain

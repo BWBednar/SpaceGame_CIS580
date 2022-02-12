@@ -24,6 +24,7 @@ namespace SpaceGame_CIS580
         //private World world;
         List<AsteroidSprite> asteroids;
         BackgroundSprite background;
+        SpaceshipSprite ship;
         
 
         public SpaceGame()
@@ -81,6 +82,7 @@ namespace SpaceGame_CIS580
             }
 
             background = new BackgroundSprite();
+            ship = new SpaceshipSprite(this);
 
             base.Initialize();
             //asteroids = new List
@@ -116,6 +118,7 @@ namespace SpaceGame_CIS580
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             foreach (var asteroid in asteroids) asteroid.LoadContent(Content);
             background.LoadContent(Content);
+            ship.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -127,6 +130,30 @@ namespace SpaceGame_CIS580
             //Move the asteroid across the screen
             foreach (var asteroid in asteroids) asteroid.Update(gameTime);
             //Detect collisions of asteroids
+            UpdateAsteroids();
+
+            //update the ship based on user input
+            ship.Update(gameTime);
+
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
+            _spriteBatch.Begin();
+            foreach (var asteroid in asteroids) asteroid.Draw(gameTime, _spriteBatch);
+            background.Draw(gameTime, _spriteBatch);
+            ship.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+            base.Draw(gameTime);
+
+        }
+
+        private void UpdateAsteroids()
+        {
             for (int i = 0; i < asteroids.Count; i++)
             {
                 for (int j = i + 1; j < asteroids.Count; j++)
@@ -158,20 +185,6 @@ namespace SpaceGame_CIS580
                     }
                 }
             }
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
-            _spriteBatch.Begin();
-            foreach (var asteroid in asteroids) asteroid.Draw(gameTime, _spriteBatch);
-            background.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
-            base.Draw(gameTime);
-
         }
     }
 }

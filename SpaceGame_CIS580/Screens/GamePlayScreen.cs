@@ -14,10 +14,10 @@ namespace SpaceGame_CIS580.Screens
     public class GamePlayScreen : GameScreen
     {
         private ContentManager _content;
-        private SpriteFont _gameFont;
+        //private SpriteFont _gameFont;
 
         private Vector2 _playerPosition = new Vector2(100, 100);
-        private SpaceshipSprite _ship = new SpaceshipSprite();
+        //private SpaceshipSprite _ship = new SpaceshipSprite();
 
         public GamePlayScreen()
         {
@@ -27,7 +27,7 @@ namespace SpaceGame_CIS580.Screens
         public override void Activate()
         {
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
-            _ship.LoadContent(_content);
+            //_ship.LoadContent(_content);
         }
 
         public override void Deactivate()
@@ -87,7 +87,7 @@ namespace SpaceGame_CIS580.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
-            _ship.Draw(gameTime, spriteBatch);
+            //_ship.Draw(gameTime, spriteBatch);
             //spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
 
             spriteBatch.End();
