@@ -28,6 +28,11 @@ namespace SpaceGame_CIS580
         SpaceshipSprite ship;
         List<BlasterFireSprite> blasterFire;
         List<ExplosionSprite> explosions;
+        double timer;
+        SpriteFont pressStart2P;
+        bool gameStart = true;
+        bool gameLose = false;
+        bool gameVictory = false;
         
 
         public SpaceGame()
@@ -70,18 +75,19 @@ namespace SpaceGame_CIS580
             {
                 int xLocation = random.Next(50, Constants.GAME_WIDTH - 50);
                 int yLocation = random.Next(50, Constants.GAME_HEIGHT - 50);
-                while ((xLocation >= xMidPoint + 150 || xLocation <= xMidPoint - 150) ||
-                    ((yLocation >= yMidPoint + 150 || yLocation <= yMidPoint - 150)))
+                while ((xLocation <= xMidPoint + 150 && xLocation >= xMidPoint - 150) &&
+                    ((yLocation <= yMidPoint + 150 && yLocation >= yMidPoint - 150)))
                 {
-                    asteroids.Add(new AsteroidSprite()
-                    {
-                        Center = new Vector2(xLocation, yLocation),
-                        Velocity = new Vector2(50 - (float)random.NextDouble() * 100, 50 - (float)random.NextDouble() * 100),
-                        Mass = 25
-                    });
+                    
                     xLocation = random.Next(50, Constants.GAME_WIDTH - 50);
                     yLocation = random.Next(50, Constants.GAME_HEIGHT - 50);
                 }
+                asteroids.Add(new AsteroidSprite()
+                {
+                    Center = new Vector2(xLocation, yLocation),
+                    Velocity = new Vector2(50 - (float)random.NextDouble() * 50, 50 - (float)random.NextDouble() * 50),
+                    Mass = 25
+                });
             }
 
             background = new BackgroundSprite();
@@ -124,6 +130,7 @@ namespace SpaceGame_CIS580
             foreach (var asteroid in asteroids) asteroid.LoadContent(Content);
             background.LoadContent(Content);
             ship.LoadContent(Content);
+            pressStart2P = Content.Load<SpriteFont>("PressStart2P");
         }
 
         KeyboardState lastInput;
@@ -154,7 +161,7 @@ namespace SpaceGame_CIS580
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Transparent);
             //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
             _spriteBatch.Begin();
             background.Draw(gameTime, _spriteBatch);
@@ -162,6 +169,27 @@ namespace SpaceGame_CIS580
             foreach (var fire in blasterFire) if (fire.OnScreen) fire.Draw(gameTime, _spriteBatch);
             if(!ship.Destroyed) ship.Draw(gameTime, _spriteBatch);
             foreach (var explosion in explosions) if (!explosion.AnimationComplete) explosion.Draw(gameTime, _spriteBatch);
+
+            if (gameStart)
+            {
+                _spriteBatch.DrawString(pressStart2P, "Destory", new Vector2(75, 35), Color.Gold);
+                _spriteBatch.DrawString(pressStart2P, "Asteroids", new Vector2(115, 85), Color.Gold);
+                timer += gameTime.ElapsedGameTime.TotalSeconds;
+                if (timer >= 3.0)
+                {
+                    gameStart = false;
+                }
+            }
+            if (gameLose)
+            {
+                _spriteBatch.DrawString(pressStart2P, "Restart Game", new Vector2(75, 35), Color.Gold);
+                _spriteBatch.DrawString(pressStart2P, "To Try Again", new Vector2(115, 85), Color.Gold);
+            }
+            if (gameVictory)
+            {
+                _spriteBatch.DrawString(pressStart2P, "You Win!", new Vector2(75, 35), Color.Gold);
+                _spriteBatch.DrawString(pressStart2P, "Well Done!", new Vector2(115, 85), Color.Gold);
+            }
             _spriteBatch.End();
             base.Draw(gameTime);
 
@@ -174,10 +202,11 @@ namespace SpaceGame_CIS580
             for (int i = 0; i < asteroids.Count; i++)
             {
                 //If the space ship has hit a rocket, the ship will be destroyed
-                if (ship.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
+                if (ship.CollidesWith(asteroids[i].Bounds) && !ship.Destroyed)
                 {
                     ship.Destroyed = true;
                     CreateExplosion(new Vector2(ship.Bounds.X, ship.Bounds.Y));
+                    gameLose = true;
                 }
                 foreach (var fire in blasterFire)
                 {
@@ -225,6 +254,7 @@ namespace SpaceGame_CIS580
                 blasterFire[toRemoveBlaster] = null;
                 blasterFire.RemoveAt(toRemoveBlaster);
             }
+            if (asteroids.Count == 0) gameVictory = true;
         }
 
         private void CreateBlasterFire()

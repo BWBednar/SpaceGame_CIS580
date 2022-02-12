@@ -25,7 +25,7 @@ namespace SpaceGame_CIS580
 
         public AsteroidSprite()
         {
-            this.bounds = new BoundingCircle(Center + new Vector2(16, 16), 32);
+            this.bounds = new BoundingCircle(Center + new Vector2(-16, -16), 32);
         }
 
         /// <summary>
