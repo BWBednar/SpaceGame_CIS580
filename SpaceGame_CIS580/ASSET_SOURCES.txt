@@ -1,4 +1,6 @@
-﻿Content/space_background.png - created by Polovinkin as part of their Space Pack on Itch.io (https://vectorpixelstar.itch.io/space), licensed for free use - based on statement 
+﻿***Not all assets used in the current state of this project
+
+Content/space_background.png - created by Polovinkin as part of their Space Pack on Itch.io (https://vectorpixelstar.itch.io/space), licensed for free use - based on statement 
 from public-license.txt file in the download folder ("You can use this work on your personal or commercial projects, no credit required. Just don't redistribute the assets.")
 
 Content/ship.png - created by Tavino on Itch.io (https://tavino.itch.io/spaceship), licensed for free use - no official statement in asset description but free price on Itch.io

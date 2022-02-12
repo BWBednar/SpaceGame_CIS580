@@ -37,9 +37,9 @@ namespace SpaceGame_CIS580
                 animationFrame++;
                 if (animationFrame == 4) animationFrame = 0;
             }
-            var source = new Rectangle(0, 0, 64, 64);
+            var source = new Rectangle(animationFrame * 64, 0, 64, 64);
 
-            spriteBatch.Draw(_backgroundTexture, new Vector2(0,0), source, Color.White, 0, new Vector2(0, 0), 0, SpriteEffects.None, 0);
+            spriteBatch.Draw(_backgroundTexture, new Vector2(100,100), source, Color.White, 0, new Vector2(0, 0), 0, SpriteEffects.None, 0);
             //spriteBatch.Draw(_backgroundTexture, fullscreen,
             //new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
         }

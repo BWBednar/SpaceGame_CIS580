@@ -27,6 +27,7 @@ namespace SpaceGame_CIS580
         BackgroundSprite background;
         SpaceshipSprite ship;
         List<BlasterFireSprite> blasterFire;
+        List<ExplosionSprite> explosions;
         
 
         public SpaceGame()
@@ -65,7 +66,7 @@ namespace SpaceGame_CIS580
             asteroids = new List<AsteroidSprite>();
             int xMidPoint = Constants.GAME_WIDTH / 2;
             int yMidPoint = Constants.GAME_HEIGHT / 2;
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int xLocation = random.Next(50, Constants.GAME_WIDTH - 50);
                 int yLocation = random.Next(50, Constants.GAME_HEIGHT - 50);
@@ -86,7 +87,7 @@ namespace SpaceGame_CIS580
             background = new BackgroundSprite();
             ship = new SpaceshipSprite(this, new BoundingRectangle(xMidPoint - 26, yMidPoint - 26, 52, 52));
             blasterFire = new List<BlasterFireSprite>();
-
+            explosions = new List<ExplosionSprite>();
 
             base.Initialize();
             //asteroids = new List
@@ -134,10 +135,11 @@ namespace SpaceGame_CIS580
             currentInput = Keyboard.GetState();
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-            if (currentInput.IsKeyUp(Keys.Space) && lastInput.IsKeyDown(Keys.Space)) BlasterFire();
+            if (currentInput.IsKeyUp(Keys.Space) && lastInput.IsKeyDown(Keys.Space)) CreateBlasterFire();
 
             //Move the asteroid across the screen
             foreach (var asteroid in asteroids) asteroid.Update(gameTime);
+            
             //Detect collisions of asteroids
             AsteroidDetectionAndUpdates();
 
@@ -147,8 +149,6 @@ namespace SpaceGame_CIS580
             //update the ship based on user input
             ship.Update(gameTime);
 
-            
-
             base.Update(gameTime);
         }
 
@@ -157,11 +157,11 @@ namespace SpaceGame_CIS580
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
             _spriteBatch.Begin();
-            foreach (var asteroid in asteroids) if(!asteroid.Destroyed) asteroid.Draw(gameTime, _spriteBatch);
             background.Draw(gameTime, _spriteBatch);
+            foreach (var asteroid in asteroids) if(!asteroid.Destroyed) asteroid.Draw(gameTime, _spriteBatch);
             foreach (var fire in blasterFire) if (fire.OnScreen) fire.Draw(gameTime, _spriteBatch);
             if(!ship.Destroyed) ship.Draw(gameTime, _spriteBatch);
-            
+            foreach (var explosion in explosions) if (!explosion.AnimationComplete) explosion.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
             base.Draw(gameTime);
 
@@ -169,11 +169,26 @@ namespace SpaceGame_CIS580
 
         private void AsteroidDetectionAndUpdates()
         {
+            int toRemoveAsteroid = -1;
+            int toRemoveBlaster = -1;
             for (int i = 0; i < asteroids.Count; i++)
             {
                 //If the space ship has hit a rocket, the ship will be destroyed
-                if (ship.CollidesWith(asteroids[i].Bounds)) ship.Destroyed = true;
-                foreach (var fire in blasterFire) if (fire.CollidesWith(asteroids[i].Bounds)) asteroids[i].Destroyed = true;
+                if (ship.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
+                {
+                    ship.Destroyed = true;
+                    CreateExplosion(ship.Position);
+                }
+                foreach (var fire in blasterFire)
+                {
+                    if (fire.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
+                    {
+                        asteroids[i].Destroyed = true;
+                        CreateExplosion(asteroids[i].Bounds.Center);
+                        toRemoveAsteroid = asteroids.IndexOf(asteroids[i]);
+                        toRemoveBlaster = blasterFire.IndexOf(fire);
+                    }
+                }
                 for (int j = i + 1; j < asteroids.Count; j++)
                 {
                     if (asteroids[i].CollidesWith(asteroids[j]))
@@ -203,17 +218,28 @@ namespace SpaceGame_CIS580
                     }
                 }
             }
+            if (toRemoveAsteroid != -1 && toRemoveBlaster != -1)
+            {
+                asteroids[toRemoveAsteroid] = null;
+                asteroids.RemoveAt(toRemoveAsteroid);
+                blasterFire[toRemoveBlaster] = null;
+                blasterFire.RemoveAt(toRemoveBlaster);
+            }
         }
 
-        private void BlasterFire()
+        private void CreateBlasterFire()
         {
             BlasterFireSprite newFire = new BlasterFireSprite(ship.Angle, ship.Position,
                 new BoundingRectangle(ship.Position.X - 16, ship.Position.Y - 16, 16, 16));
             newFire.LoadContent(Content);
             blasterFire.Add(newFire);
-            //initialize blaster fire
-            //have it fire at the angle of the spaceship
-            //have it stop when it reaches the edge of the screen
+        }
+
+        private void CreateExplosion(Vector2 position)
+        {
+            ExplosionSprite newExplosion = new ExplosionSprite(position);
+            newExplosion.LoadContent(Content);
+            explosions.Add(newExplosion);
         }
     }
 }

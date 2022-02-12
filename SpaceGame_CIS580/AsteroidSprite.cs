@@ -14,6 +14,8 @@ namespace SpaceGame_CIS580
         private Vector2 origin;
         private float radius;
         private float scale;
+        private double timer;
+        private int rotationCount;
 
         private BoundingCircle bounds;
 
@@ -81,8 +83,16 @@ namespace SpaceGame_CIS580
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Destroyed) return;
+
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer > 0.1)
+            {
+                timer -= 0.1;
+                rotationCount++;
+            }
             Rectangle source = new Rectangle(0, 192, 32, 32);
-            spriteBatch.Draw(_texture, Center, source, Color.White, 0, origin, scale, SpriteEffects.None, 0);
+            double roation = (float)rotationCount * 0.05;
+            spriteBatch.Draw(_texture, Center, source, Color.White, (float)roation, origin, scale, SpriteEffects.None, 0);
         }
 
         public bool CollidesWith(AsteroidSprite other)

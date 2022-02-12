@@ -133,6 +133,9 @@ namespace SpaceGame_CIS580
             if (position.Y > viewport.Height) position.Y = 0;
             if (position.X < 0) position.X = viewport.Width;
             if (position.X > viewport.Width) position.X = 0;
+
+            bounds.X = this.position.X;
+            bounds.Y = this.position.Y;
         }
 
         /// <summary>

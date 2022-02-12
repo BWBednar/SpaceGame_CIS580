@@ -86,11 +86,11 @@ namespace SpaceGame_CIS580.Screens
         {
             var spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            //spriteBatch.Begin();
             //_ship.Draw(gameTime, spriteBatch);
             //spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
 
-            spriteBatch.End();
+            //spriteBatch.End();
 
         }
     }

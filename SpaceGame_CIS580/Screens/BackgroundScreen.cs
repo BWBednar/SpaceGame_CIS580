@@ -76,12 +76,9 @@ namespace SpaceGame_CIS580.Screens
             var viewport = ScreenManager.GraphicsDevice.Viewport;
             var fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
 
-            spriteBatch.Begin();
             spriteBatch.Draw(_backgroundTexture, fullscreen, source, Color.White, 0, new Vector2(64, 64), SpriteEffects.None, 0);
             //spriteBatch.Draw(_backgroundTexture, fullscreen,
                 //new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
-
-            spriteBatch.End();
         }
     }
 }
