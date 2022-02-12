@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceGame_CIS580.Screens;
 using SpaceGame_CIS580.StateManagement;
+using SpaceGame_CIS580.Collisions;
 //using tainicom.Aether.Physics2D.Dynamics; Was having trouble with physics engine, so following example for the example C for game physics for now
 
 namespace SpaceGame_CIS580
@@ -25,6 +26,7 @@ namespace SpaceGame_CIS580
         List<AsteroidSprite> asteroids;
         BackgroundSprite background;
         SpaceshipSprite ship;
+        List<BlasterFireSprite> blasterFire;
         
 
         public SpaceGame()
@@ -82,7 +84,9 @@ namespace SpaceGame_CIS580
             }
 
             background = new BackgroundSprite();
-            ship = new SpaceshipSprite(this);
+            ship = new SpaceshipSprite(this, new BoundingRectangle(xMidPoint - 26, yMidPoint - 26, 52, 52));
+            blasterFire = new List<BlasterFireSprite>();
+
 
             base.Initialize();
             //asteroids = new List
@@ -121,20 +125,29 @@ namespace SpaceGame_CIS580
             ship.LoadContent(Content);
         }
 
+        KeyboardState lastInput;
+        KeyboardState currentInput;
         protected override void Update(GameTime gameTime)
         {
             //base.Update(gameTime);
+            lastInput = currentInput;
+            currentInput = Keyboard.GetState();
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            if (currentInput.IsKeyUp(Keys.Space) && lastInput.IsKeyDown(Keys.Space)) BlasterFire();
 
             //Move the asteroid across the screen
             foreach (var asteroid in asteroids) asteroid.Update(gameTime);
             //Detect collisions of asteroids
-            UpdateAsteroids();
+            AsteroidDetectionAndUpdates();
+
+            //update any blaster fire that is present
+            foreach (var fire in blasterFire) fire.Update(gameTime);
 
             //update the ship based on user input
             ship.Update(gameTime);
 
+            
 
             base.Update(gameTime);
         }
@@ -144,18 +157,23 @@ namespace SpaceGame_CIS580
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
             _spriteBatch.Begin();
-            foreach (var asteroid in asteroids) asteroid.Draw(gameTime, _spriteBatch);
+            foreach (var asteroid in asteroids) if(!asteroid.Destroyed) asteroid.Draw(gameTime, _spriteBatch);
             background.Draw(gameTime, _spriteBatch);
-            ship.Draw(gameTime, _spriteBatch);
+            foreach (var fire in blasterFire) if (fire.OnScreen) fire.Draw(gameTime, _spriteBatch);
+            if(!ship.Destroyed) ship.Draw(gameTime, _spriteBatch);
+            
             _spriteBatch.End();
             base.Draw(gameTime);
 
         }
 
-        private void UpdateAsteroids()
+        private void AsteroidDetectionAndUpdates()
         {
             for (int i = 0; i < asteroids.Count; i++)
             {
+                //If the space ship has hit a rocket, the ship will be destroyed
+                if (ship.CollidesWith(asteroids[i].Bounds)) ship.Destroyed = true;
+                foreach (var fire in blasterFire) if (fire.CollidesWith(asteroids[i].Bounds)) asteroids[i].Destroyed = true;
                 for (int j = i + 1; j < asteroids.Count; j++)
                 {
                     if (asteroids[i].CollidesWith(asteroids[j]))
@@ -185,6 +203,17 @@ namespace SpaceGame_CIS580
                     }
                 }
             }
+        }
+
+        private void BlasterFire()
+        {
+            BlasterFireSprite newFire = new BlasterFireSprite(ship.Angle, ship.Position,
+                new BoundingRectangle(ship.Position.X - 16, ship.Position.Y - 16, 16, 16));
+            newFire.LoadContent(Content);
+            blasterFire.Add(newFire);
+            //initialize blaster fire
+            //have it fire at the angle of the spaceship
+            //have it stop when it reaches the edge of the screen
         }
     }
 }

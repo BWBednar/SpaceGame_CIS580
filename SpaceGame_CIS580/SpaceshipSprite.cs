@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using SpaceGame_CIS580.Collisions;
 //using tainicom.Aether.Physics2D.Dynamics;
 //using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
@@ -29,19 +30,30 @@ namespace SpaceGame_CIS580
         Vector2 velocity;
         Vector2 direction;
 
-        float angle;
         float angularVelocity;
 
-        public SpaceshipSprite(Game game)
+        public Vector2 Position
+        {
+            get { return position; }
+        }
+
+        private BoundingRectangle bounds;
+
+        public BoundingRectangle Bounds => bounds;
+
+        public SpaceshipSprite(Game game, BoundingRectangle bounds)
         {
             this.game = game;
             this.direction = -Vector2.UnitY;
+            this.bounds = bounds;
         }
 
         /// <summary>
         /// Indicates if the space ship has collided with anything
         /// </summary>
         public bool Colliding { get; set; }
+
+        public bool Destroyed { get; set; }
 
         /// <summary>
         /// Vector for the center of the space ship
@@ -52,6 +64,8 @@ namespace SpaceGame_CIS580
         /// Vector for the velocity of the space ship
         /// </summary>
         public Vector2 Velocity { get; set; }
+
+        public float Angle { get; private set; }
 
         public float Mass
         {
@@ -106,9 +120,9 @@ namespace SpaceGame_CIS580
             }
 
             angularVelocity += angularAcceleration * t;
-            angle += angularAcceleration * t;
-            direction.X = (float)Math.Sin(angle);
-            direction.Y = (float)-Math.Cos(angle);
+            Angle += angularAcceleration * t;
+            direction.X = (float)Math.Sin(Angle);
+            direction.Y = (float)-Math.Cos(Angle);
 
             velocity += acceleration * t;
             position += velocity * t;
@@ -128,7 +142,12 @@ namespace SpaceGame_CIS580
         /// <param name="spriteBatch"></param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, position, null, Color.White, angle, new Vector2(26, 26), 1.0f, SpriteEffects.None, 0);
+            spriteBatch.Draw(_texture, position, null, Color.White, Angle, new Vector2(26, 26), 1.0f, SpriteEffects.None, 0);
+        }
+
+        public bool CollidesWith(BoundingCircle circle)
+        {
+            return this.bounds.CollidesWith(circle);
         }
 
     }

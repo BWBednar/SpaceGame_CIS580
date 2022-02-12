@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using SpaceGame_CIS580.Collisions;
 
 namespace SpaceGame_CIS580
 {
@@ -13,6 +14,17 @@ namespace SpaceGame_CIS580
         private Vector2 origin;
         private float radius;
         private float scale;
+
+        private BoundingCircle bounds;
+
+        public BoundingCircle Bounds => bounds;
+
+        public bool Destroyed = false;
+
+        public AsteroidSprite()
+        {
+            this.bounds = new BoundingCircle(Center + new Vector2(16, 16), 32);
+        }
 
         /// <summary>
         /// Indicates if the asteroid has collided with anything
@@ -55,18 +67,21 @@ namespace SpaceGame_CIS580
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
+            if (Destroyed) return;
             Center += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            
             //Keeps the asteroid on screen, will eventually want it to travel to the opposite end of the screen
             if (Center.X < radius || Center.X > Constants.GAME_WIDTH - radius) Velocity *= -Vector2.UnitX;
             if (Center.Y < radius || Center.Y > Constants.GAME_HEIGHT - radius) Velocity *= -Vector2.UnitY;
-
+            bounds.Center.X = this.Center.X;
+            bounds.Center.Y = this.Center.Y;
             Colliding = false;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Rectangle source = new Rectangle(0, 194, 32, 32);
+            if (Destroyed) return;
+            Rectangle source = new Rectangle(0, 192, 32, 32);
             spriteBatch.Draw(_texture, Center, source, Color.White, 0, origin, scale, SpriteEffects.None, 0);
         }
 
