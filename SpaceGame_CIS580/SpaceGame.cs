@@ -1,5 +1,6 @@
 ﻿/**
- * Starting Code from Nathan Bean's GameArchitectureExample project, currently the architecture example is not implemented though
+ * Starting Code from Nathan Bean's GameArchitectureExample project (Screens and State Management folders
+ * and ScrrenFactory.cs file), currently the architecture example is not implemented though, but it is still present
  */
 
 using System.Collections.Generic;
