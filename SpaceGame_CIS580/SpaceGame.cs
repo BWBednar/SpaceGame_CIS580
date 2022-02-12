@@ -60,7 +60,7 @@ namespace SpaceGame_CIS580
             _asteroids = new List<AsteroidSprite>();
             int xMidPoint = Constants.GAME_WIDTH / 2;
             int yMidPoint = Constants.GAME_HEIGHT / 2;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 int xLocation = random.Next(50, Constants.GAME_WIDTH - 50);
                 int yLocation = random.Next(50, Constants.GAME_HEIGHT - 50);
@@ -120,7 +120,41 @@ namespace SpaceGame_CIS580
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
+            //Move the asteroid across the screen
             foreach (var asteroid in _asteroids) asteroid.Update(gameTime);
+            //Detect collisions of asteroids
+            for (int i = 0; i < _asteroids.Count; i++)
+            {
+                for (int j = i + 1; j < _asteroids.Count; j++)
+                {
+                    if (_asteroids[i].CollidesWith(_asteroids[j]))
+                    {
+                        _asteroids[i].Colliding = true;
+                        _asteroids[j].Colliding = true;
+
+                        Vector2 collisionAxis = _asteroids[i].Center - _asteroids[j].Center;
+                        collisionAxis.Normalize();
+                        float angle = (float)System.Math.Acos(Vector2.Dot(collisionAxis, Vector2.UnitX));
+                        float m0 = _asteroids[i].Mass;
+                        float m1 = _asteroids[j].Mass;
+
+                        Vector2 u0 = Vector2.Transform(_asteroids[i].Velocity, Matrix.CreateRotationZ(angle));
+                        Vector2 u1 = Vector2.Transform(_asteroids[j].Velocity, Matrix.CreateRotationZ(angle));
+
+                        Vector2 v0;
+                        Vector2 v1;
+
+                        v0.X = ((m0 - m1) / (m0 + m1)) * u0.X + ((2 * m1) / (m0 + m1)) * u1.X;
+                        v1.X = ((2 * m0) / (m0 + m1)) * u0.X + ((m1 - m0) / (m0 + m1)) * u1.X;
+                        v0.Y = u0.Y;
+                        v1.Y = u1.Y;
+
+                        _asteroids[i].Velocity = Vector2.Transform(v0, Matrix.CreateRotationZ(angle));
+                        _asteroids[i].Velocity = Vector2.Transform(v1, Matrix.CreateRotationZ(angle));
+                    }
+                }
+            }
+
 
             base.Update(gameTime);
         }

@@ -66,7 +66,7 @@ namespace SpaceGame_CIS580
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Rectangle source = new Rectangle(0, 192, 32, 32);
+            Rectangle source = new Rectangle(0, 194, 32, 32);
             spriteBatch.Draw(_texture, Center, source, Color.White, 0, origin, scale, SpriteEffects.None, 0);
         }
 
