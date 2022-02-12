@@ -13,20 +13,34 @@ namespace SpaceGame_CIS580
     {
         Texture2D _texture;
         float scale;
+        float radius;
         Vector2 origin;
-        Body body;
 
         /// <summary>
-        /// A boolean indicating if the spaceship sprite has collided with another sprite
+        /// Indicates if the space ship has collided with anything
         /// </summary>
-        public bool Colliding { get; protected set; }
+        public bool Colliding { get; set; }
 
-        public SpaceshipSprite(float body)
+        /// <summary>
+        /// Vector for the center of the space ship
+        /// </summary>
+        public Vector2 Center { get; set; }
+
+        /// <summary>
+        /// Vector for the velocity of the space ship
+        /// </summary>
+        public Vector2 Velocity { get; set; }
+
+        public float Mass
         {
-
+            get => radius;
+            set
+            {
+                radius = value;
+                scale = radius / 16;
+                origin = new Vector2(16, 16); // asteroid sprite is 32 by 32 pixels
+            }
         }
-
-        public SpaceshipSprite() { }
 
         /// <summary>
         /// Load the space ship texture

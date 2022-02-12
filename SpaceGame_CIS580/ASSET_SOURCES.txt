@@ -8,3 +8,9 @@ on statement from asset readme.txt file in download package ("LICENSE: You can u
 
 Content/saturn_planet.png - created by Kxnai using Deep-Fold pixel planet generator (https://deep-fold.itch.io/pixel-planet-generator), asset available on Itch.io (https://kxnai.itch.io/5-free-pixel-planets),
 licensed for free use - based on statement from asset page's description ("These are free to use commercially and personally.")
+
+Content/16ShipCollection.png - created by Master484 on FreeGameArt.Org (https://opengameart.org/content/1616-ship-collection), licensed under public domain
+
+Content/explosionBig.png - created by Justin Dalessandro(ColdOneK) on FreeGameArt.Org (https://opengameart.org/content/2d-pixel-explosion-9-frames), licensed under CC-BY 4.0
+
+Content/blasterbolt.png - created by AlejandroHaibi on FreeGameArt.Org (https://opengameart.org/content/blaster-bolt), licensed under public domain

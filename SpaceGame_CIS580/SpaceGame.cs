@@ -22,7 +22,9 @@ namespace SpaceGame_CIS580
         private SpriteBatch _spriteBatch;
         //private readonly ScreenManager _screenManager;
         //private World world;
-        List<AsteroidSprite> _asteroids;
+        List<AsteroidSprite> asteroids;
+        BackgroundSprite background;
+        
 
         public SpaceGame()
         {
@@ -57,7 +59,7 @@ namespace SpaceGame_CIS580
         protected override void Initialize()
         {
             System.Random random = new System.Random();
-            _asteroids = new List<AsteroidSprite>();
+            asteroids = new List<AsteroidSprite>();
             int xMidPoint = Constants.GAME_WIDTH / 2;
             int yMidPoint = Constants.GAME_HEIGHT / 2;
             for (int i = 0; i < 20; i++)
@@ -67,7 +69,7 @@ namespace SpaceGame_CIS580
                 while ((xLocation >= xMidPoint + 150 || xLocation <= xMidPoint - 150) ||
                     ((yLocation >= yMidPoint + 150 || yLocation <= yMidPoint - 150)))
                 {
-                    _asteroids.Add(new AsteroidSprite()
+                    asteroids.Add(new AsteroidSprite()
                     {
                         Center = new Vector2(xLocation, yLocation),
                         Velocity = new Vector2(50 - (float)random.NextDouble() * 100, 50 - (float)random.NextDouble() * 100),
@@ -76,8 +78,9 @@ namespace SpaceGame_CIS580
                     xLocation = random.Next(50, Constants.GAME_WIDTH - 50);
                     yLocation = random.Next(50, Constants.GAME_HEIGHT - 50);
                 }
-
             }
+
+            background = new BackgroundSprite();
 
             base.Initialize();
             //asteroids = new List
@@ -111,7 +114,8 @@ namespace SpaceGame_CIS580
         protected override void LoadContent() 
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            foreach (var asteroid in _asteroids) asteroid.LoadContent(Content);
+            foreach (var asteroid in asteroids) asteroid.LoadContent(Content);
+            background.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -121,25 +125,25 @@ namespace SpaceGame_CIS580
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             //Move the asteroid across the screen
-            foreach (var asteroid in _asteroids) asteroid.Update(gameTime);
+            foreach (var asteroid in asteroids) asteroid.Update(gameTime);
             //Detect collisions of asteroids
-            for (int i = 0; i < _asteroids.Count; i++)
+            for (int i = 0; i < asteroids.Count; i++)
             {
-                for (int j = i + 1; j < _asteroids.Count; j++)
+                for (int j = i + 1; j < asteroids.Count; j++)
                 {
-                    if (_asteroids[i].CollidesWith(_asteroids[j]))
+                    if (asteroids[i].CollidesWith(asteroids[j]))
                     {
-                        _asteroids[i].Colliding = true;
-                        _asteroids[j].Colliding = true;
+                        asteroids[i].Colliding = true;
+                        asteroids[j].Colliding = true;
 
-                        Vector2 collisionAxis = _asteroids[i].Center - _asteroids[j].Center;
+                        Vector2 collisionAxis = asteroids[i].Center - asteroids[j].Center;
                         collisionAxis.Normalize();
                         float angle = (float)System.Math.Acos(Vector2.Dot(collisionAxis, Vector2.UnitX));
-                        float m0 = _asteroids[i].Mass;
-                        float m1 = _asteroids[j].Mass;
+                        float m0 = asteroids[i].Mass;
+                        float m1 = asteroids[j].Mass;
 
-                        Vector2 u0 = Vector2.Transform(_asteroids[i].Velocity, Matrix.CreateRotationZ(angle));
-                        Vector2 u1 = Vector2.Transform(_asteroids[j].Velocity, Matrix.CreateRotationZ(angle));
+                        Vector2 u0 = Vector2.Transform(asteroids[i].Velocity, Matrix.CreateRotationZ(angle));
+                        Vector2 u1 = Vector2.Transform(asteroids[j].Velocity, Matrix.CreateRotationZ(angle));
 
                         Vector2 v0;
                         Vector2 v1;
@@ -149,12 +153,11 @@ namespace SpaceGame_CIS580
                         v0.Y = u0.Y;
                         v1.Y = u1.Y;
 
-                        _asteroids[i].Velocity = Vector2.Transform(v0, Matrix.CreateRotationZ(angle));
-                        _asteroids[i].Velocity = Vector2.Transform(v1, Matrix.CreateRotationZ(angle));
+                        asteroids[i].Velocity = Vector2.Transform(v0, Matrix.CreateRotationZ(angle));
+                        asteroids[i].Velocity = Vector2.Transform(v1, Matrix.CreateRotationZ(angle));
                     }
                 }
             }
-
 
             base.Update(gameTime);
         }
@@ -164,7 +167,8 @@ namespace SpaceGame_CIS580
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
             _spriteBatch.Begin();
-            foreach (var asteroid in _asteroids) asteroid.Draw(gameTime, _spriteBatch);
+            foreach (var asteroid in asteroids) asteroid.Draw(gameTime, _spriteBatch);
+            background.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
             base.Draw(gameTime);
 
