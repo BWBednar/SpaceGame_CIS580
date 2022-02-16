@@ -67,18 +67,22 @@ namespace SpaceGame_CIS580.Screens
             if (animationTimer > 0.2)
             {
                 animationTimer -= 0.2;
-                animationFrame ++;
+                animationFrame++;
                 if (animationFrame == 4) animationFrame = 0;
             }
             var source = new Rectangle(animationFrame * 64, 0, 64, 64);
 
             var spriteBatch = ScreenManager.SpriteBatch;
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
-            var fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
-
-            spriteBatch.Draw(_backgroundTexture, fullscreen, source, Color.White, 0, new Vector2(64, 64), SpriteEffects.None, 0);
-            //spriteBatch.Draw(_backgroundTexture, fullscreen,
-                //new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
+            spriteBatch.Begin();
+            //fill the background with the animation
+            for (int i = 0; i < Constants.GAME_HEIGHT; i += 64)
+            {
+                for (int j = 0; j < Constants.GAME_WIDTH; j += 64)
+                {
+                    spriteBatch.Draw(_backgroundTexture, new Rectangle(j, i, 64, 64), source, Color.White);
+                }
+            }
+            spriteBatch.End();
         }
     }
 }

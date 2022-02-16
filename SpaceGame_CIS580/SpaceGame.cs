@@ -21,7 +21,7 @@ namespace SpaceGame_CIS580
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        //private readonly ScreenManager _screenManager;
+        private readonly ScreenManager _screenManager;
         //private World world;
         List<AsteroidSprite> asteroids;
         BackgroundSprite background;
@@ -48,16 +48,13 @@ namespace SpaceGame_CIS580
             _graphics.PreferredBackBufferHeight = Constants.GAME_HEIGHT;
             _graphics.ApplyChanges();
 
+            var screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
 
-            //Going to implement actual game architecture later, going to go simple version for functionality first
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
 
-            //var screenFactory = new ScreenFactory();
-            //Services.AddService(typeof(IScreenFactory), screenFactory);
-
-            //_screenManager = new ScreenManager(this);
-            //Components.Add(_screenManager);
-
-            //AddInitialScreens();
+            AddInitialScreens();
         }
 
         /// <summary>
@@ -65,7 +62,7 @@ namespace SpaceGame_CIS580
         /// </summary>
         private void AddInitialScreens()
         {
-            //_screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new BackgroundScreen(), null);
             //_screenManager.AddScreen(new GamePlayScreen(), null);
             //_screenManager.AddScreen(new BackgroundScreen(), null);
             //_screenManager.AddScreen(new MainMenuScreen(), null);
@@ -77,6 +74,8 @@ namespace SpaceGame_CIS580
         /// </summary>
         protected override void Initialize()
         {
+            base.Initialize();
+            /*
             //Get 10 asteroids in random positions around the ship sprite
             System.Random random = new System.Random();
             asteroids = new List<AsteroidSprite>();
@@ -141,11 +140,13 @@ namespace SpaceGame_CIS580
         /// </summary>
         protected override void LoadContent() 
         {
+            /*
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             foreach (var asteroid in asteroids) asteroid.LoadContent(Content);
             background.LoadContent(Content);
             ship.LoadContent(Content);
             pressStart2P = Content.Load<SpriteFont>("PressStart2P");
+            */
         }
 
         /// <summary>
@@ -154,6 +155,8 @@ namespace SpaceGame_CIS580
         /// <param name="gameTime">The game time</param>
         protected override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+            /*
             //base.Update(gameTime);
             lastInput = currentInput;
             currentInput = Keyboard.GetState();
@@ -175,6 +178,7 @@ namespace SpaceGame_CIS580
             ship.Update(gameTime);
 
             base.Update(gameTime);
+            */
         }
 
         /// <summary>
@@ -183,6 +187,8 @@ namespace SpaceGame_CIS580
         /// <param name="gameTime">The game time</param>
         protected override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime);
+            /*
             GraphicsDevice.Clear(Color.Transparent);
             //base.Draw(gameTime);    // The real drawing happens inside the ScreenManager component, not implemented yet
             _spriteBatch.Begin();
@@ -216,7 +222,7 @@ namespace SpaceGame_CIS580
             }
             _spriteBatch.End();
             base.Draw(gameTime);
-
+            */
         }
 
         /// <summary>
