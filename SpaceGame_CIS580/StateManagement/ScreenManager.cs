@@ -63,7 +63,7 @@ namespace SpaceGame_CIS580.StateManagement
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            //Font = _content.Load<SpriteFont>("menufont");
+            Font = _content.Load<SpriteFont>("PressStart2P");
             //BlankTexture = _content.Load<Texture2D>("blank");
 
             // Tell each of the screens to load thier content 
@@ -178,7 +178,7 @@ namespace SpaceGame_CIS580.StateManagement
         public void FadeBackBufferToBlack(float alpha)
         {
             SpriteBatch.Begin();
-            SpriteBatch.Draw(BlankTexture, GraphicsDevice.Viewport.Bounds, Color.Black * alpha);
+            //SpriteBatch.Draw(BlankTexture, GraphicsDevice.Viewport.Bounds, Color.Black * alpha);
             SpriteBatch.End();
         }
 

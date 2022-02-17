@@ -64,8 +64,7 @@ namespace SpaceGame_CIS580
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
             //_screenManager.AddScreen(new GamePlayScreen(), null);
-            //_screenManager.AddScreen(new BackgroundScreen(), null);
-            //_screenManager.AddScreen(new MainMenuScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
             //_screenManager.AddScreen(new SplashScreen(), null);
         }
 
@@ -145,7 +144,6 @@ namespace SpaceGame_CIS580
             foreach (var asteroid in asteroids) asteroid.LoadContent(Content);
             background.LoadContent(Content);
             ship.LoadContent(Content);
-            pressStart2P = Content.Load<SpriteFont>("PressStart2P");
             */
         }
 
