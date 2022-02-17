@@ -14,20 +14,38 @@ namespace SpaceGame_CIS580.Screens
     public class GamePlayScreen : GameScreen
     {
         private ContentManager _content;
-        //private SpriteFont _gameFont;
+        private SpriteFont _gameFont;
 
         private Vector2 _playerPosition = new Vector2(100, 100);
         //private SpaceshipSprite _ship = new SpaceshipSprite();
 
+        private float _pauseAlpha;
+        private readonly InputAction _pauseAction;
+
         public GamePlayScreen()
         {
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
 
         }
 
         public override void Activate()
         {
-            if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
-            //_ship.LoadContent(_content);
+            if (_content == null) 
+                _content = new ContentManager(ScreenManager.Game.Services, "Content");
+
+            _gameFont = _content.Load<SpriteFont>("PressStart2P");
+
+            // A real game would probably have more content than this sample, so
+            // it would take longer to load. We simulate that by delaying for a
+            // while, giving you a chance to admire the beautiful loading screen.
+            Thread.Sleep(1000);
+
+            // once the load has finished, we use ResetElapsedTime to tell the game's
+            // timing mechanism that we have just finished a very long frame, and that
+            // it should not try to catch up.
+            ScreenManager.Game.ResetElapsedTime();
         }
 
         public override void Deactivate()
