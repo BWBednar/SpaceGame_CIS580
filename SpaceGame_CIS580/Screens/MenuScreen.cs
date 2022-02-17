@@ -18,7 +18,7 @@ namespace SpaceGame_CIS580.Screens
     public abstract class MenuScreen : GameScreen
     {
         private ContentManager _content;
-        private BlackHoleSprite blackhole = new BlackHoleSprite(new Vector2(650, 400));
+        private BlackHoleSprite blackhole;
 
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private int _selectedEntry;
@@ -41,6 +41,8 @@ namespace SpaceGame_CIS580.Screens
 
         protected MenuScreen(string menuTitle)
         {
+            blackhole = new BlackHoleSprite(new Vector2(650, 400));
+
             _menuTitle = menuTitle;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
@@ -184,6 +186,7 @@ namespace SpaceGame_CIS580.Screens
 
             spriteBatch.DrawString(font, _menuTitle, titlePosition, titleColor,
                 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            
             blackhole.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
