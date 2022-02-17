@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using SpaceGame_CIS580.StateManagement;
+using SpaceGame_CIS580.Sprites;
 
 namespace SpaceGame_CIS580.Screens
 {
@@ -15,6 +17,9 @@ namespace SpaceGame_CIS580.Screens
     // move up and down to select an entry, or cancel to back out of the screen.
     public abstract class MenuScreen : GameScreen
     {
+        private ContentManager _content;
+        private BlackHoleSprite blackhole = new BlackHoleSprite(new Vector2(650, 400));
+
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private int _selectedEntry;
         private readonly string _menuTitle;
@@ -26,6 +31,13 @@ namespace SpaceGame_CIS580.Screens
 
         // Gets the list of menu entries, so derived classes can add or change the menu contents.
         protected IList<MenuEntry> MenuEntries => _menuEntries;
+
+        public override void Activate()
+        {
+            if (_content == null)
+                _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            blackhole.LoadContent(_content);
+        }
 
         protected MenuScreen(string menuTitle)
         {
@@ -165,13 +177,14 @@ namespace SpaceGame_CIS580.Screens
             // Draw the menu title centered on the screen
             var titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
             var titleOrigin = font.MeasureString(_menuTitle) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            var titleColor = Color.Yellow;//new Color(192, 192, 192) * TransitionAlpha;
             const float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
             spriteBatch.DrawString(font, _menuTitle, titlePosition, titleColor,
                 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            blackhole.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }

@@ -68,6 +68,7 @@ namespace SpaceGame_CIS580.Screens
 
             // Modify the alpha to fade text out during transitions.
             color *= screen.TransitionAlpha;
+           
 
             // Draw text, centered on the middle of each line.
             var screenManager = screen.ScreenManager;
