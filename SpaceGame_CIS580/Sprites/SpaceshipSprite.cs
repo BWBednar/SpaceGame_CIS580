@@ -17,18 +17,11 @@ namespace SpaceGame_CIS580
 {
     public class SpaceshipSprite
     {
-        const float LINEAR_ACCELERATION = 50;
-        const float ANGULAR_ACCELERATION = 5;
 
         Texture2D _texture;
-        float scale;
-        float radius;
-        Vector2 origin;
         Game game;
         Vector2 position = new Vector2(Constants.GAME_WIDTH / 2, Constants.GAME_HEIGHT / 2);
-        Vector2 velocity;
         Vector2 direction;
-        float angularVelocity;
 
         /// <summary>
         /// The position of the space ship sprite
@@ -36,6 +29,7 @@ namespace SpaceGame_CIS580
         public Vector2 Position
         {
             get { return position; }
+            set { position = value; }
         }
 
         private BoundingRectangle bounds;
@@ -72,12 +66,18 @@ namespace SpaceGame_CIS580
         /// </summary>
         public Vector2 Center { get; set; }
 
+        public Vector2 Direction
+        {
+            get { return direction; }
+            set { direction = value; }
+        }
+
         /// <summary>
         /// Vector for the velocity of the space ship
         /// </summary>
         public Vector2 Velocity { get; set; }
 
-        public float Angle { get; private set; }
+        public float Angle { get; set; }
 
         /// <summary>
         /// Load the space ship texture
@@ -96,38 +96,6 @@ namespace SpaceGame_CIS580
         {
             Colliding = false;
 
-            KeyboardState keyboardState = Keyboard.GetState();
-            float t = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            Vector2 acceleration = new Vector2(0, 0);
-            float angularAcceleration = 0;
-            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
-            {
-                acceleration += direction * LINEAR_ACCELERATION;
-                angularAcceleration += ANGULAR_ACCELERATION;
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
-            {
-                acceleration += direction * LINEAR_ACCELERATION;
-                angularAcceleration -= ANGULAR_ACCELERATION;
-            }
-            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
-            {
-                acceleration += direction * LINEAR_ACCELERATION;
-            }
-            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
-            {
-                acceleration += -direction * LINEAR_ACCELERATION;
-            }
-
-            angularVelocity += angularAcceleration * t;
-            Angle += angularAcceleration * t;
-            direction.X = (float)Math.Sin(Angle);
-            direction.Y = (float)-Math.Cos(Angle);
-
-            velocity += acceleration * t;
-            position += velocity * t;
-
             // Wrap the ship to keep it on-screen
             var viewport = game.GraphicsDevice.Viewport;
             if (position.Y < 0) position.Y = viewport.Height;
@@ -135,8 +103,8 @@ namespace SpaceGame_CIS580
             if (position.X < 0) position.X = viewport.Width;
             if (position.X > viewport.Width) position.X = 0;
 
-            bounds.X = this.position.X;
-            bounds.Y = this.position.Y;
+            bounds.X = position.X;
+            bounds.Y = position.Y;
         }
 
         /// <summary>

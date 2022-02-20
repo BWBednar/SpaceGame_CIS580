@@ -23,7 +23,7 @@ namespace SpaceGame_CIS580.Screens
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GamePlayScreen()); //new CutSceneScreen());
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GamePlayScreen());
         }
 
         protected override void OnCancel(PlayerIndex playerIndex)

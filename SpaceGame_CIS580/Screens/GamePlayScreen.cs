@@ -30,6 +30,9 @@ namespace SpaceGame_CIS580.Screens
         private bool gameVictory = false;
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
+        private readonly InputAction _fireAction;
+        private KeyboardState lastInput;
+        private KeyboardState currentInput;
 
         public GamePlayScreen()
         {
@@ -40,12 +43,13 @@ namespace SpaceGame_CIS580.Screens
                 new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back, Keys.Escape }, true);
 
-            
+            _fireAction = new InputAction(
+                new[] { Buttons.X },
+                new[] { Keys.Space }, true);
         }
 
         public override void Activate()
         {
-            
 
             //Get 10 asteroids in random positions around the ship sprite
             System.Random random = new System.Random();
@@ -117,7 +121,23 @@ namespace SpaceGame_CIS580.Screens
 
             if (IsActive)
             {
-                //put gameplay here
+                lastInput = currentInput;
+                currentInput = Keyboard.GetState();
+
+                //Account for some user input for blaster fire and exit
+                if (currentInput.IsKeyUp(Keys.Space) && lastInput.IsKeyDown(Keys.Space)) CreateBlasterFire();
+
+                //Move the asteroid across the screen
+                foreach (var asteroid in asteroids) asteroid.Update(gameTime);
+
+                //Detect collisions of asteroids
+                AsteroidDetectionAndUpdates();
+
+                //update any blaster fire that is present
+                foreach (var fire in blasterFire) fire.Update(gameTime);
+
+                //update the ship based on user input
+                ship.Update(gameTime);
             }
         }
 
@@ -129,29 +149,54 @@ namespace SpaceGame_CIS580.Screens
 
 
             // Look up inputs for the active player profile.
-            int playerIndex = 1;
+            int playerIndex = (int)ControllingPlayer.Value;
 
             var keyboardState = input.CurrentKeyboardStates[playerIndex];
 
-            //  move the player position.
-            var movement = Vector2.Zero;
+            PlayerIndex player;
+            if (_pauseAction.Occurred(input, ControllingPlayer, out player))
+            {
+                //Implement pause screen later
+                //ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
+            if (_fireAction.Occurred(input, ControllingPlayer, out player))
+            {
+                CreateBlasterFire();
+            }
 
-            if (keyboardState.IsKeyDown(Keys.Left))
-                movement.X--;
+            Vector2 direction;
+            float angularVelocity = 0;
+            float t = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (keyboardState.IsKeyDown(Keys.Right))
-                movement.X++;
+            Vector2 acceleration = new Vector2(0, 0);
+            float angularAcceleration = 0;
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
+            {
+                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+                angularAcceleration += Constants.ANGULAR_ACCELERATION;
+            }
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+            {
+                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+                angularAcceleration -= Constants.ANGULAR_ACCELERATION;
+            }
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+            {
+                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+            }
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+            {
+                acceleration += -ship.Direction * Constants.LINEAR_ACCELERATION;
+            }
 
-            if (keyboardState.IsKeyDown(Keys.Up))
-                movement.Y--;
+            angularVelocity += angularAcceleration * t;
+            ship.Angle += angularAcceleration * t;
+            direction.X = (float)Math.Sin(ship.Angle);
+            direction.Y = (float)-Math.Cos(ship.Angle);
 
-            if (keyboardState.IsKeyDown(Keys.Down))
-                movement.Y++;
-
-            if (movement.Length() > 1)
-                movement.Normalize();
-
-            //_playerPosition += movement * 8f;
+            ship.Velocity += acceleration * t;
+            ship.Position += ship.Velocity * t;
+            
         }
 
         public override void Draw(GameTime gameTime)
