@@ -31,6 +31,13 @@ namespace SpaceGame_CIS580.Collisions
 
         public float Bottom => Y + Height;
 
+        /// <summary>
+        /// Constructor for the bounding rectangle
+        /// </summary>
+        /// <param name="x">The center X coordinate</param>
+        /// <param name="y">The center Y coordinate</param>
+        /// <param name="width">The width</param>
+        /// <param name="height">The height</param>
         public BoundingRectangle(float x, float y, float width, float height)
         {
             X = x;
@@ -39,6 +46,12 @@ namespace SpaceGame_CIS580.Collisions
             Height = height;
         }
 
+        /// <summary>
+        /// Constructor for the bounding rectangle
+        /// </summary>
+        /// <param name="position">The starting position</param>
+        /// <param name="width">The width</param>
+        /// <param name="height">The height</param>
         public BoundingRectangle(Vector2 position, float width, float height)
         {
             X = position.X;
@@ -47,11 +60,21 @@ namespace SpaceGame_CIS580.Collisions
             Height = height;
         }
 
+        /// <summary>
+        /// Determines if the bounding rectangle has colliding with another rectangle
+        /// </summary>
+        /// <param name="other">The other bounding rectangle</param>
+        /// <returns>True if they have collided</returns>
         public bool CollidesWith(BoundingRectangle other)
         {
             return CollisionHelper.Collides(this, other);
         }
 
+        /// <summary>
+        /// Determines if the bounding rectangle has colliding with another circle
+        /// </summary>
+        /// <param name="other">The other bounding circle</param>
+        /// <returns>True if they have collided</returns>
         public bool CollidesWith(BoundingCircle other)
         {
             return CollisionHelper.Collides(other, this);

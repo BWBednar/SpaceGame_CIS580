@@ -18,6 +18,9 @@ namespace SpaceGame_CIS580.Screens
         private double animationTimer;
         private int animationFrame;
 
+        /// <summary>
+        /// Constructor for the background screen
+        /// </summary>
         public BackgroundScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);

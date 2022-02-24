@@ -1,4 +1,8 @@
-﻿using System;
+﻿/**
+ * Starting Code from Nathan Bean's GameArchitectureExample project
+ */
+
+using System;
 using System.Threading;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -32,12 +36,16 @@ namespace SpaceGame_CIS580.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
         private readonly InputAction _fireAction;
+        private readonly InputAction _restartAction;
         private KeyboardState lastInput;
         private KeyboardState currentInput;
         private SoundEffect blasterFireSound;
         private SoundEffect shipExplosionSound;
         private SoundEffect asteroidExplosionSound;
 
+        /// <summary>
+        /// Constructor for the gameplay screen
+        /// </summary>
         public GamePlayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -50,8 +58,15 @@ namespace SpaceGame_CIS580.Screens
             _fireAction = new InputAction(
                 new[] { Buttons.X },
                 new[] { Keys.Space }, true);
+
+            _restartAction = new InputAction(
+                new[] { Buttons.Back },
+                new[] { Keys.Enter }, true);
         }
 
+        /// <summary>
+        /// Activates the necessary assets and their content
+        /// </summary>
         public override void Activate()
         {
 
@@ -104,16 +119,28 @@ namespace SpaceGame_CIS580.Screens
             ScreenManager.Game.ResetElapsedTime();
         }
 
+        /// <summary>
+        /// Deactivates the game play screen
+        /// </summary>
         public override void Deactivate()
         {
             base.Deactivate();
         }
 
+        /// <summary>
+        /// Unloads the content present in the gameplay screen
+        /// </summary>
         public override void Unload()
         {
             _content.Unload();
         }
 
+        /// <summary>
+        /// Updates the game play screen
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
+        /// <param name="otherScreenHasFocus">If a different screen has focus</param>
+        /// <param name="coveredByOtherScreen">If this screen is covered by a different screen</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
@@ -146,7 +173,13 @@ namespace SpaceGame_CIS580.Screens
             }
         }
 
-        //NEEDS CHANGES
+        /// <summary>
+        /// Handles the user input for the gameplay screen.
+        /// 
+        /// Currently need to fix a bug with the ship not moving left or right properly
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
+        /// <param name="input">The input from the user</param>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
@@ -154,7 +187,7 @@ namespace SpaceGame_CIS580.Screens
 
 
             // Look up inputs for the active player profile.
-            int playerIndex = (int)ControllingPlayer.Value;
+            int playerIndex = 1;
 
             var keyboardState = input.CurrentKeyboardStates[playerIndex];
 
@@ -164,9 +197,13 @@ namespace SpaceGame_CIS580.Screens
                 //Implement pause screen later
                 //ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
-            if (_fireAction.Occurred(input, ControllingPlayer, out player))
+            else if (_fireAction.Occurred(input, ControllingPlayer, out player))
             {
                 CreateBlasterFire();
+            }
+            else if (_restartAction.Occurred(input, ControllingPlayer, out player))
+            {
+                RestartGameplayScreen();
             }
 
             Vector2 direction;
@@ -204,6 +241,10 @@ namespace SpaceGame_CIS580.Screens
             
         }
 
+        /// <summary>
+        /// Draws the gameplay screen's content
+        /// </summary>
+        /// <param name="gameTime">The game time</param>
         public override void Draw(GameTime gameTime)
         {
             var _spriteBatch = ScreenManager.SpriteBatch;
@@ -226,14 +267,15 @@ namespace SpaceGame_CIS580.Screens
             //Display a message if the player loses the game
             if (gameLose)
             {
-                _spriteBatch.DrawString(ScreenManager.Font, "Restart Game", new Vector2(75, 35), Color.Gold);
-                _spriteBatch.DrawString(ScreenManager.Font, "To Try Again", new Vector2(115, 85), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "You Lose.", new Vector2(75, 35), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "Press Enter", new Vector2(75, 85), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "To Restart", new Vector2(115, 135), Color.Gold);
             }
             //Display a message if the player wins the game
             if (gameVictory && !gameLose)
             {
                 _spriteBatch.DrawString(ScreenManager.Font, "You Win!", new Vector2(75, 35), Color.Gold);
-                _spriteBatch.DrawString(ScreenManager.Font, "Well Done!", new Vector2(115, 85), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "Press Enter To Restart!", new Vector2(115, 85), Color.Gold);
             }
             _spriteBatch.End();
 
@@ -332,6 +374,16 @@ namespace SpaceGame_CIS580.Screens
             ExplosionSprite newExplosion = new ExplosionSprite(position);
             newExplosion.LoadContent(_content);
             explosions.Add(newExplosion);
+        }
+
+        /// <summary>
+        /// Helper method for resetting the gameplay screen.
+        /// Includes resetting ship position, asteroids, and the boolean state variables for the game
+        /// </summary>
+        private void RestartGameplayScreen()
+        {
+            LoadingScreen.Load(ScreenManager, true, null, new BackgroundScreen(), new GamePlayScreen());
+            this.Deactivate();
         }
     }
 }

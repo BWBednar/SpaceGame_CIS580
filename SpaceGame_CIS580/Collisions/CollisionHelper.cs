@@ -47,6 +47,12 @@ namespace SpaceGame_CIS580.Collisions
             return Math.Pow(c.Radius, 2) >= Math.Pow(c.Center.X - nearestX, 2) + Math.Pow(c.Center.Y - nearestY, 2);
         }
 
+        /// <summary>
+        /// Detects a collision between a BoundingCircle and a BoundingRectangle
+        /// </summary>
+        /// <param name="r">The bounding rectanlge</param>
+        /// <param name="c">The bounding circle</param>
+        /// <returns>true for collision, false otherwise</returns>
         public static bool Collides(BoundingRectangle r, BoundingCircle c) => Collides(c, r);
     }
 }

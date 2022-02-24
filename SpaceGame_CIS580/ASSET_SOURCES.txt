@@ -12,10 +12,10 @@ Content/blasterbolt.png - created by AlejandroHaibi on FreeGameArt.Org (https://
 
 Content/Press_Start_2P/PressStart2P-Regular.ttf - Press_Start_2P font created by CodeMan38, released on Google Fonts (https://fonts.google.com/specimen/Press%20Start%202P) under the Open Font License
 
-Content/Asteroid_Explosion - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+Content/Asteroid_Explosion.wav - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
 
-Content/Laser_Sound - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+Content/Laser_Sound.wav - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
 
-Content/Ship_Explosion - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+Content/Ship_Explosion.wav - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
 
-Content/Lost_in_Space - created by Marcus H. Bolanos and available on Free Music Archive (https://freemusicarchive.org/music/Marcos_H_Bolanos/music-for-no-film/lost-in-space), licensed under CC BY-NC 4.0, no changes were made to this asset
+Content/Lost_in_Space.mp3 - created by Marcus H. Bolanos and available on Free Music Archive (https://freemusicarchive.org/music/Marcos_H_Bolanos/music-for-no-film/lost-in-space), licensed under CC BY-NC 4.0, no changes were made to this asset
