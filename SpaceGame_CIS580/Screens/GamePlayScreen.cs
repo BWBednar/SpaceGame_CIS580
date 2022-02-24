@@ -206,35 +206,34 @@ namespace SpaceGame_CIS580.Screens
                 RestartGameplayScreen();
             }
 
-            Vector2 direction;
             float angularVelocity = 0;
             float t = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector2 acceleration = new Vector2(0, 0);
             float angularAcceleration = 0;
+            Vector2 direction = ship.Direction;
             if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
             {
-                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+                acceleration += direction * Constants.LINEAR_ACCELERATION;
                 angularAcceleration += Constants.ANGULAR_ACCELERATION;
             }
             if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
             {
-                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+                acceleration += direction * Constants.LINEAR_ACCELERATION;
                 angularAcceleration -= Constants.ANGULAR_ACCELERATION;
             }
             if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
             {
-                acceleration += ship.Direction * Constants.LINEAR_ACCELERATION;
+                acceleration += direction * Constants.LINEAR_ACCELERATION;
             }
             if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
             {
-                acceleration += -ship.Direction * Constants.LINEAR_ACCELERATION;
+                acceleration += -direction * Constants.LINEAR_ACCELERATION;
             }
 
             angularVelocity += angularAcceleration * t;
-            ship.Angle += angularAcceleration * t;
-            direction.X = (float)Math.Sin(ship.Angle);
-            direction.Y = (float)-Math.Cos(ship.Angle);
+            ship.Angle += angularVelocity * t;
+            ship.Direction = new Vector2((float)Math.Sin(ship.Angle), (float)-Math.Cos(ship.Angle));
 
             ship.Velocity += acceleration * t;
             ship.Position += ship.Velocity * t;
