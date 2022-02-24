@@ -30,6 +30,7 @@ namespace SpaceGame_CIS580.Screens
         private bool _otherScreensAreGone;
         private readonly GameScreen[] _screensToLoad;
         private ContentManager _content;
+        private BackgroundSprite background;
 
         // Constructor is private: loading screens should be activated via the static Load method instead.
         private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow, GameScreen[] screensToLoad)
@@ -39,7 +40,7 @@ namespace SpaceGame_CIS580.Screens
             loadingSpriteRight = new LoadingSprite(new Vector2(viewport.Width / 2, viewport.Height / 2));
             _loadingIsSlow = loadingIsSlow;
             _screensToLoad = screensToLoad;
-
+            background = new BackgroundSprite();
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
@@ -49,6 +50,7 @@ namespace SpaceGame_CIS580.Screens
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
             loadingSpriteLeft.LoadContent(_content);
             loadingSpriteRight.LoadContent(_content);
+            background.LoadContent(_content);
         }
 
         // Activates the loading screen.
@@ -121,9 +123,10 @@ namespace SpaceGame_CIS580.Screens
 
                 // Draw the text.
                 spriteBatch.Begin();
+                background.Draw(gameTime, spriteBatch);
                 spriteBatch.DrawString(font, message, textPosition, color);
                 loadingSpriteLeft.Center = textPosition - new Vector2(48, textSize.Y);
-                loadingSpriteRight.Center = textPosition + new Vector2(textSize.X + 48, textSize.Y + 48);
+                loadingSpriteRight.Center = textPosition + new Vector2(textSize.X + 64, textSize.Y + 48);
                 loadingSpriteLeft.Draw(gameTime, spriteBatch);
                 loadingSpriteRight.Draw(gameTime, spriteBatch);
                 spriteBatch.End();
