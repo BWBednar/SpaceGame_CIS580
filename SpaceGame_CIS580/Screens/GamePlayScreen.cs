@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using SpaceGame_CIS580.StateManagement;
 using SpaceGame_CIS580.Sprites;
 using SpaceGame_CIS580.Collisions;
@@ -33,6 +34,9 @@ namespace SpaceGame_CIS580.Screens
         private readonly InputAction _fireAction;
         private KeyboardState lastInput;
         private KeyboardState currentInput;
+        private SoundEffect blasterFireSound;
+        private SoundEffect shipExplosionSound;
+        private SoundEffect asteroidExplosionSound;
 
         public GamePlayScreen()
         {
@@ -85,8 +89,9 @@ namespace SpaceGame_CIS580.Screens
             _gameFont = _content.Load<SpriteFont>("PressStart2P");
             foreach (var asteroid in asteroids) asteroid.LoadContent(_content);
             ship.LoadContent(_content);
-
-           
+            blasterFireSound = _content.Load<SoundEffect>("Laser_Sound");
+            shipExplosionSound = _content.Load<SoundEffect>("Ship_Explosion");
+            asteroidExplosionSound = _content.Load<SoundEffect>("Asteroid_Explosion");
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -248,6 +253,7 @@ namespace SpaceGame_CIS580.Screens
                 if (ship.CollidesWith(asteroids[i].Bounds) && !ship.Destroyed)
                 {
                     ship.Destroyed = true;
+                    shipExplosionSound.Play();
                     CreateExplosion(new Vector2(ship.Bounds.X, ship.Bounds.Y));
                     gameLose = true;
                 }
@@ -257,6 +263,7 @@ namespace SpaceGame_CIS580.Screens
                     if (fire.CollidesWith(asteroids[i].Bounds) && !asteroids[i].Destroyed)
                     {
                         asteroids[i].Destroyed = true;
+                        asteroidExplosionSound.Play();
                         CreateExplosion(new Vector2(asteroids[i].Bounds.Center.X, asteroids[i].Bounds.Center.Y));
                         toRemoveAsteroid = asteroids.IndexOf(asteroids[i]);
                         toRemoveBlaster = blasterFire.IndexOf(fire);
@@ -311,6 +318,7 @@ namespace SpaceGame_CIS580.Screens
         {
             BlasterFireSprite newFire = new BlasterFireSprite(ship.Angle, ship.Position,
                 new BoundingRectangle(ship.Position.X - 16, ship.Position.Y - 16, 16, 16));
+            blasterFireSound.Play();
             newFire.LoadContent(_content);
             blasterFire.Add(newFire);
         }

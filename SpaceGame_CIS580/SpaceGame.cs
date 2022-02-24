@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using SpaceGame_CIS580.Screens;
 using SpaceGame_CIS580.StateManagement;
 using SpaceGame_CIS580.Collisions;
@@ -21,6 +22,8 @@ namespace SpaceGame_CIS580
     {
         private GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
+
+        private Song backgroundMusic;
 
         /// <summary>
         /// Contructor for the game
@@ -64,7 +67,12 @@ namespace SpaceGame_CIS580
         /// <summary>
         /// Load the game content
         /// </summary>
-        protected override void LoadContent() { }
+        protected override void LoadContent() 
+        {
+            backgroundMusic = Content.Load<Song>("Lost_in_Space");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(backgroundMusic);
+        }
         
 
         /// <summary>

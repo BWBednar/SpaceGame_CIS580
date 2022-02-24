@@ -4,10 +4,18 @@ from public-license.txt file in the download folder ("You can use this work on y
 Content/CelestialObjects.png - created by N2D as part of their Celestial Objects Pack on Itch.io (https://norma-2d.itch.io/celestial-objects-pixel-art-pack), licensed for free use - based 
 on statement from asset readme.txt file in download package ("LICENSE: You can use this asset pack both in free and commercial projects. You may modify it to suit your own needs. Credit is not necessary, but appreciated.")
 
-Content/explosionBig.png - created by Justin Dalessandro(ColdOneK) on FreeGameArt.Org (https://opengameart.org/content/2d-pixel-explosion-9-frames), licensed under CC-BY 4.0
+Content/explosionBig.png - created by Justin Dalessandro(ColdOneK) on FreeGameArt.Org (https://opengameart.org/content/2d-pixel-explosion-9-frames), licensed under CC-BY 4.0, no changes were made to this asset
 
 Content/shuttle2.png - created by Xevin on FreeGameArt.Org (https://opengameart.org/content/simple-spaceship), licensed under public domain
 
 Content/blasterbolt.png - created by AlejandroHaibi on FreeGameArt.Org (https://opengameart.org/content/blaster-bolt), licensed under public domain
 
 Content/Press_Start_2P/PressStart2P-Regular.ttf - Press_Start_2P font created by CodeMan38, released on Google Fonts (https://fonts.google.com/specimen/Press%20Start%202P) under the Open Font License
+
+Content/Asteroid_Explosion - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+
+Content/Laser_Sound - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+
+Content/Ship_Explosion - created by me (Brandon Bednar), using Bfxr Sound Effects Tool
+
+Content/Lost_in_Space - created by Marcus H. Bolanos and available on Free Music Archive (https://freemusicarchive.org/music/Marcos_H_Bolanos/music-for-no-film/lost-in-space), licensed under CC BY-NC 4.0, no changes were made to this asset
