@@ -275,7 +275,8 @@ namespace SpaceGame_CIS580.Screens
             if (gameVictory && !gameLose)
             {
                 _spriteBatch.DrawString(ScreenManager.Font, "You Win!", new Vector2(75, 35), Color.Gold);
-                _spriteBatch.DrawString(ScreenManager.Font, "Press Enter To Restart!", new Vector2(115, 85), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "Press Enter", new Vector2(75, 85), Color.Gold);
+                _spriteBatch.DrawString(ScreenManager.Font, "To Restart", new Vector2(115, 135), Color.Gold);
             }
             _spriteBatch.End();
 
