@@ -19,7 +19,22 @@ namespace SpaceGame_CIS580.ParticleSystem
 
         protected override void InitializeConstants()
         {
-            textureFilename = "explosion";
+            int textureChoice = RandomHelper.Next(3);
+            switch (textureChoice)
+            {
+                case 0:
+                    textureFilename = "explosion0";
+                    break;
+                case 1:
+                    textureFilename = "explosion1";
+                    break;
+                case 2:
+                    textureFilename = "explosion2";
+                    break;
+                default:
+                    textureFilename = "explosion0";
+                    break;
+            }
             minNumParticles = 20;
             maxNumParticles = 25;
             blendState = BlendState.Additive;

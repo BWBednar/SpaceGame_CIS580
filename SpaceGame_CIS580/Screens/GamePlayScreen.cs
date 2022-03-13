@@ -13,13 +13,14 @@ using Microsoft.Xna.Framework.Audio;
 using SpaceGame_CIS580.StateManagement;
 using SpaceGame_CIS580.Sprites;
 using SpaceGame_CIS580.Collisions;
+using SpaceGame_CIS580.ParticleSystem;
 
 namespace SpaceGame_CIS580.Screens
 {
     /// <summary>
     /// Implements the main game logic
     /// </summary>
-    public class GamePlayScreen : GameScreen
+    public class GamePlayScreen : GameScreen, IParticleEmitter
     {
         private ContentManager _content;
         private SpriteFont _gameFont;
@@ -42,6 +43,10 @@ namespace SpaceGame_CIS580.Screens
         private SoundEffect blasterFireSound;
         private SoundEffect shipExplosionSound;
         private SoundEffect asteroidExplosionSound;
+        private ExplosionParticleSystem _explosions;
+
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
 
         /// <summary>
         /// Constructor for the gameplay screen
@@ -108,14 +113,10 @@ namespace SpaceGame_CIS580.Screens
             shipExplosionSound = _content.Load<SoundEffect>("Ship_Explosion");
             asteroidExplosionSound = _content.Load<SoundEffect>("Asteroid_Explosion");
 
-            // A real game would probably have more content than this sample, so
-            // it would take longer to load. We simulate that by delaying for a
-            // while, giving you a chance to admire the beautiful loading screen.
+            _explosions = new ExplosionParticleSystem(ScreenManager.Game, 20);
+
             Thread.Sleep(1000);
 
-            // once the load has finished, we use ResetElapsedTime to tell the game's
-            // timing mechanism that we have just finished a very long frame, and that
-            // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
         }
 
@@ -296,7 +297,7 @@ namespace SpaceGame_CIS580.Screens
                 {
                     ship.Destroyed = true;
                     shipExplosionSound.Play();
-                    CreateExplosion(new Vector2(ship.Bounds.X, ship.Bounds.Y));
+                    _explosions.PlaceExplosion(new Vector2(ship.Bounds.X, ship.Bounds.Y));
                     gameLose = true;
                 }
                 foreach (var fire in blasterFire)
@@ -306,7 +307,7 @@ namespace SpaceGame_CIS580.Screens
                     {
                         asteroids[i].Destroyed = true;
                         asteroidExplosionSound.Play();
-                        CreateExplosion(new Vector2(asteroids[i].Bounds.Center.X, asteroids[i].Bounds.Center.Y));
+                        _explosions.PlaceExplosion(new Vector2(asteroids[i].Bounds.Center.X, asteroids[i].Bounds.Center.Y));
                         toRemoveAsteroid = asteroids.IndexOf(asteroids[i]);
                         toRemoveBlaster = blasterFire.IndexOf(fire);
                     }
@@ -366,15 +367,17 @@ namespace SpaceGame_CIS580.Screens
         }
 
         /// <summary>
-        /// Helper method for creating new explosion sprites
+        /// Helper method for creating new explosion sprites. Not being used currently due to use of particle explosions
         /// </summary>
         /// <param name="position">The position of the explosion</param>
+        /*
         private void CreateExplosion(Vector2 position)
         {
             ExplosionSprite newExplosion = new ExplosionSprite(position);
             newExplosion.LoadContent(_content);
             explosions.Add(newExplosion);
         }
+        */
 
         /// <summary>
         /// Helper method for resetting the gameplay screen.
