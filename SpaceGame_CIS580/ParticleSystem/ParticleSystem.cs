@@ -1,5 +1,5 @@
 ﻿/**
- * Starting code for this file based on particle-system-example created by Nathan Bean
+ * Starting code for this file taken from particle-system-example created by Nathan Bean
  */
 
 using System;
@@ -11,25 +11,56 @@ using Microsoft.Xna.Framework.Content;
 
 namespace SpaceGame_CIS580.ParticleSystem
 {
-    public class ParticleSystem
+    /// <summary>
+    /// A class representing a generic particle system
+    /// </summary>
+    public abstract class ParticleSystem : DrawableGameComponent
     {
+        #region Constants
+
         /// <summary>
         /// The draw order for particles using Alpha Blending
         /// </summary>
+        /// <remarks>
+        /// Particles drawn using additive blending should be drawn on top of 
+        /// particles that use regular alpha blending
+        /// </remarks>
         public const int AlphaBlendDrawOrder = 100;
 
         /// <summary>
         /// The draw order for particles using Additive Blending
         /// </summary>
+        /// <remarks>
+        /// Particles drawn using additive blending should be drawn on top of 
+        /// particles that use regular alpha blending
+        /// </remarks>
         public const int AdditiveBlendDrawOrder = 200;
 
+        #endregion
+
+        #region static fields
+
         /// <summary>
-        /// The collection of particles
+        /// A SpriteBatch to share amongst the various particle systems
+        /// </summary>
+        protected static SpriteBatch spriteBatch;
+
+        /// <summary>
+        /// A ContentManager to share amongst the various particle systems
+        /// </summary>
+        protected static ContentManager contentManager;
+
+        #endregion
+
+        #region private fields
+
+        /// <summary>
+        /// The collection of particles 
         /// </summary>
         Particle[] particles;
 
         /// <summary>
-        /// A queue containing indices of unused particles in the Particle array
+        /// A Queue containing indices of unused particles in the Particles array
         /// </summary>
         Queue<int> freeParticles;
 
@@ -43,6 +74,10 @@ namespace SpaceGame_CIS580.ParticleSystem
         /// </summary>
         Vector2 origin;
 
+        #endregion
+
+        #region protected fields
+
         /// <summary>The BlendState to use with this particle system</summary>
         protected BlendState blendState = BlendState.AlphaBlend;
 
@@ -55,12 +90,18 @@ namespace SpaceGame_CIS580.ParticleSystem
         /// <summary>The maximum number of particles to add when AddParticles() is called</summary>
         protected int maxNumParticles;
 
+        #endregion
+
+        #region public properties 
+
         /// <summary>
         /// The available particles in the system 
         /// </summary>
         public int FreeParticleCount => freeParticles.Count;
 
-        // <summary>
+        #endregion
+
+        /// <summary>
         /// Constructs a new instance of a particle system
         /// </summary>
         /// <param name="game"></param>
@@ -77,6 +118,8 @@ namespace SpaceGame_CIS580.ParticleSystem
             // Run the InitializeConstants hook
             InitializeConstants();
         }
+
+        #region virtual hook methods 
 
         /// <summary>
         /// Used to do the initial configuration of the particle engine.  The 
@@ -117,6 +160,10 @@ namespace SpaceGame_CIS580.ParticleSystem
             // Update the time the particle has been alive 
             particle.TimeSinceStart += dt;
         }
+
+        #endregion
+
+        #region override methods 
 
         /// <summary>
         /// Override the base class LoadContent to load the texture. once it's
@@ -205,6 +252,10 @@ namespace SpaceGame_CIS580.ParticleSystem
             base.Draw(gameTime);
         }
 
+        #endregion
+
+        #region AddParticles methods 
+
         /// <summary>
         /// AddParticles's job is to add an effect somewhere on the screen. If there 
         /// aren't enough particles in the freeParticles queue, it will use as many as 
@@ -214,11 +265,10 @@ namespace SpaceGame_CIS580.ParticleSystem
         /// <param name="where">where the particle effect should be created</param>
         protected void AddParticles(Vector2 where)
         {
-            Random r = new Random();
             // the number of particles we want for this effect is a random number
             // somewhere between the two constants specified by the subclasses.
             int numParticles =
-                r.Next(minNumParticles, maxNumParticles);
+                RandomHelper.Next(minNumParticles, maxNumParticles);
 
             // create that many particles, if you can.
             for (int i = 0; i < numParticles && freeParticles.Count > 0; i++)
@@ -238,11 +288,10 @@ namespace SpaceGame_CIS580.ParticleSystem
         /// <param name="where">where the particle effect should be created</param>
         protected void AddParticles(Rectangle where)
         {
-            Random r = new Random();
             // the number of particles we want for this effect is a random number
             // somewhere between the two constants specified by the subclasses.
             int numParticles =
-                r.Next(minNumParticles, maxNumParticles);
+                RandomHelper.Next(minNumParticles, maxNumParticles);
 
             // create that many particles, if you can.
             for (int i = 0; i < numParticles && freeParticles.Count > 0; i++)
@@ -252,5 +301,8 @@ namespace SpaceGame_CIS580.ParticleSystem
                 InitializeParticle(ref particles[index], RandomHelper.RandomPosition(where));
             }
         }
+
+        #endregion
+
     }
 }
